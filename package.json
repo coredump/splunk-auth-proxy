@@ -1,0 +1,17 @@
+{
+  "author": "Jonathan Rudenberg <jonathan@shopify.com>",
+  "name": "splunk-auth-proxy",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Shopify/splunk-auth-proxy.git"
+  },
+  "engines": {
+    "node": "0.4.8"
+  },
+  "dependencies": {
+    "coffee-script": "",
+    "connect": "",
+    "connect-googleapps": "0.2.3"
+  }
+}
