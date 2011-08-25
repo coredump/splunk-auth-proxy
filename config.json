@@ -1,0 +1,17 @@
+{
+  "web": {
+    "port": "4000"
+  },
+  "ssl": {
+    "key": "./certs/privatekey.pem",
+    "cert": "./certs/certificate.pem"
+  },
+  "splunk": {
+    "hostname": "localhost",
+    "port": "8000"
+  },
+  "google": {
+    "domain": "example.com",
+    "secret": "secret"
+  }
+}
