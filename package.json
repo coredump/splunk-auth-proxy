@@ -1,5 +1,8 @@
 {
   "author": "Jonathan Rudenberg <jonathan@shopify.com>",
+  "contributors": [
+    "Dale Neufeld <dale.neufeld@shopify.com> (http://github.com/dneufeld/)"
+  ],
   "name": "splunk-auth-proxy",
   "version": "0.1.0",
   "repository": {

@@ -7,7 +7,7 @@ url        = require('url')
 
 proxy = (req, res, next) ->
   req.headers['Remote-User'] = req.session.user.split('@')[0]
-  proxy_req = http.request host: exports.config.splunkHost, port: exports.config.splunkPort, path: req.url, method: req.method, headers: req.headers, (proxy_res) ->
+  proxy_req = http.request host: exports.config.splunk.hostname, port: exports.config.splunk.port, path: req.url, method: req.method, headers: req.headers, (proxy_res) ->
     proxy_res.on 'data', (chunk) -> res.write(chunk, 'binary')
     proxy_res.on 'end', -> res.end()
     proxy_res.on 'close', -> res.end()
@@ -17,7 +17,7 @@ proxy = (req, res, next) ->
       location = url.parse(res_headers.location)
       location.protocol = 'https:'
       location.host = req.headers.host
-      location.port = exports.config.port
+      location.port = exports.config.web.port
       res_headers.location = url.format(location)
 
     res.writeHead(proxy_res.statusCode, res_headers)
@@ -31,28 +31,28 @@ proxy = (req, res, next) ->
 main = ->
   console.log("starting splunk-auth-proxy")
   if process.argv.length != 3
-	console.log("Usage: splunk-auth-proxy <config.json>")
-	return
+    console.log("Usage: splunk-auth-proxy <config.json>")
+    return
+	
+  try
+    configFile = fs.readFileSync(process.argv[2], 'utf-8')
+  catch e
+    console.log("Unable to read config file")
+    throw e
+    return
 
   try
-	configFile = fs.readFileSync(process.argv[2], 'utf-8')
+    exports.config = JSON.parse configFile
   catch e
-	console.log("Unable to read config file")
-	throw e
-	return
-
-  try
-	exports.config = JSON.parse configFile
-  catch e
-	console.log("Couldn't parse config file. Please verify the format.")
-	throw e
-	return
+    console.log("Couldn't parse config file. Please verify the format.")
+    throw e
+    return
 
   console.log("Parsed config file")
 
   sslMiddleware = {
-          key:  fs.readFileSync(exports.config.ssl.key),
-          cert: fs.readFileSync(exports.config.ssl.cert)
+    key:  fs.readFileSync(exports.config.ssl.key),
+    cert: fs.readFileSync(exports.config.ssl.cert)
   }
 
   connect.createServer(
@@ -61,8 +61,8 @@ main = ->
     connect.session(secret: exports.config.google.secret),
     googleAuth(exports.config.google.domain, secure: true),
     proxy
-  ).listen(exports.config.port)
-  console.log("Server started on https://0.0.0.0:#{exports.config.port}/")
+  ).listen(exports.config.web.port)
+  console.log("Server started on https://0.0.0.0:#{exports.config.web.port}/")
 
 main()
 
