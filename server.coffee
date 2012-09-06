@@ -63,7 +63,7 @@ main = ->
     .use(proxy)
 
   https.createServer(
-    options,
+    sslMiddleware,
     app
   ).listen(exports.config.web.port)
   console.log("Server started on https://0.0.0.0:#{exports.config.web.port}/")
