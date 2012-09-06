@@ -1,6 +1,7 @@
 connect    = require('connect')
 googleAuth = require('connect-googleapps')
 http       = require('http')
+https      = require('https')
 fs         = require('fs')
 url        = require('url')
 
@@ -55,12 +56,15 @@ main = ->
     cert: fs.readFileSync(exports.config.ssl.cert)
   }
 
-  connect.createServer(
-    sslMiddleware,
-    connect.cookieParser(),
-    connect.session(secret: exports.config.google.secret),
-    googleAuth(exports.config.google.domain, secure: true),
-    proxy
+  app = connect()
+    .use(connect.cookieParser())
+    .use(connect.session(secret: exports.config.google.secret))
+    .use(googleAuth(exports.config.google.domain, secure: true))
+    .use(proxy)
+
+  https.createServer(
+    options,
+    app
   ).listen(exports.config.web.port)
   console.log("Server started on https://0.0.0.0:#{exports.config.web.port}/")
 
