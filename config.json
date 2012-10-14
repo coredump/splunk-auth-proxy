@@ -13,5 +13,9 @@
   "google": {
     "domain": "example.com",
     "secret": "secret"
+  },
+  "api": {
+    "username": "client",
+    "password": "password"
   }
 }

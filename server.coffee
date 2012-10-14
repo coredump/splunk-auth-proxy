@@ -5,7 +5,6 @@ https      = require('https')
 fs         = require('fs')
 url        = require('url')
 
-
 proxy = (req, res, next) ->
   req.headers['Remote-User'] = req.session.user.split('@')[0]
   proxy_req = http.request host: exports.config.splunk.hostname, port: exports.config.splunk.port, path: req.url, method: req.method, headers: req.headers, (proxy_res) ->
@@ -29,12 +28,20 @@ proxy = (req, res, next) ->
   req.on 'data', (chunk) -> proxy_req.write(chunk, 'binary')
   req.on 'end', -> proxy_req.end()
 
+apiAuth = ({username, password}, googleAuthInstance) ->
+  connectAuth = connect.basicAuth(username, password)
+  return (req, res, next) ->
+    if req.headers.authorization?
+      connectAuth(req, res, next)
+    else
+      googleAuthInstance(req, res, next)
+
 main = ->
   console.log("starting splunk-auth-proxy")
   if process.argv.length != 3
     console.log("Usage: splunk-auth-proxy <config.json>")
     return
-	
+
   try
     configFile = fs.readFileSync(process.argv[2], 'utf-8')
   catch e
@@ -56,11 +63,15 @@ main = ->
     cert: fs.readFileSync(exports.config.ssl.cert)
   }
 
+  auth = apiAuth(exports.config.api, googleAuth(exports.config.google.domain, secure: true))
+
   app = connect()
+    .use(connect.logger())
     .use(connect.cookieParser())
     .use(connect.session(secret: exports.config.google.secret))
-    .use(googleAuth(exports.config.google.domain, secure: true))
+    .use(auth)
     .use(proxy)
+    .use(connect.errorHandler())
 
   https.createServer(
     sslMiddleware,
@@ -69,4 +80,3 @@ main = ->
   console.log("Server started on https://0.0.0.0:#{exports.config.web.port}/")
 
 main()
-
