@@ -28,11 +28,16 @@ proxy = (req, res, next) ->
   req.on 'data', (chunk) -> proxy_req.write(chunk, 'binary')
   req.on 'end', -> proxy_req.end()
 
-apiAuth = ({username, password}, googleAuthInstance) ->
-  connectAuth = connect.basicAuth(username, password)
+apiAuth = (apiConfig, googleAuthInstance) ->
+  connectAuth = connect.basicAuth(apiConfig.username, apiConfig.password)
   return (req, res, next) ->
-    if req.headers.authorization?
-      connectAuth(req, res, next)
+    if apiConfig.enabled && req.headers.authorization?
+      connectAuth req, res, ->
+        if req.user
+          req.authorized = true
+          req.session.authenticated = true
+          req.session.user = apiConfig.splunkEmail
+        next()
     else
       googleAuthInstance(req, res, next)
 
@@ -66,12 +71,10 @@ main = ->
   auth = apiAuth(exports.config.api, googleAuth(exports.config.google.domain, secure: true))
 
   app = connect()
-    .use(connect.logger())
     .use(connect.cookieParser())
     .use(connect.session(secret: exports.config.google.secret))
     .use(auth)
     .use(proxy)
-    .use(connect.errorHandler())
 
   https.createServer(
     sslMiddleware,

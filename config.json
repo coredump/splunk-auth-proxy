@@ -15,7 +15,9 @@
     "secret": "secret"
   },
   "api": {
+    "enabled": true,
     "username": "client",
-    "password": "password"
+    "password": "password",
+    "splunkEmail": "email@example.com",
   }
 }
