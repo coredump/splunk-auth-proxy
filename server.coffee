@@ -36,7 +36,7 @@ apiAuth = (apiConfig, googleAuthInstance) ->
         if req.user
           req.authorized = true
           req.session.authenticated = true
-          req.session.user = apiConfig.splunkEmail
+          req.session.user = apiConfig.username
         next()
     else
       googleAuthInstance(req, res, next)
