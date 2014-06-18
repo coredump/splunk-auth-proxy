@@ -35,6 +35,5 @@ web.conf
 	remoteUser = Remote-User
 
 ##Contributing
-1.Fork  
-2.Branch  
-3.Pull Request  
+
+Fork, branch & pull request.
