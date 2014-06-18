@@ -9,17 +9,18 @@ Splunk single sign-on proxy for Google Apps OpenID authentication
 
 ## Usage
 
-###pre-requisites
-* [nodejs](http://nodejs.org/)
-* [npm](http://npmjs.org/)
-
 	git clone https://github.com/Shopify/splunk-auth-proxy.git
 	cd splunk-auth-proxy
 	npm install
 
 	coffee server.coffee <config.json>
 
-###splunk SSO configuration
+### Pre-requisites
+
+* [nodejs](http://nodejs.org/)
+* [npm](http://npmjs.org/)
+
+### Splunk SSO configuration
 
 server.conf
 
