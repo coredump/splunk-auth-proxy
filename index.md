@@ -2,7 +2,6 @@
 layout: index
 ---
 
-# splunk-auth-proxy
 [![Build Status](https://travis-ci.org/Shopify/splunk-auth-proxy.png?branch=master)](https://travis-ci.org/Shopify/splunk-auth-proxy)
 
 Splunk single sign-on proxy for Google Apps OpenID authentication
@@ -35,6 +34,10 @@ web.conf
 	SSOMode = strict
 	remoteUser = Remote-User
 
-##Contributing
+## Contributing
 
 Fork, branch & pull request.
+
+## License
+
+Copyright (c) 2011 Shopify. Released under the [MIT-LICENSE](http://opensource.org/licenses/MIT).
