@@ -18,6 +18,14 @@ npm install
 coffee server.coffee <config.json>
 ````
 
+### SSL chain certificates
+
+In `config.json` add this to the ssl config:
+
+```
+    "chain": "path/to/chain/bundle"
+```
+
 ###splunk SSO configuration
 
 server.conf

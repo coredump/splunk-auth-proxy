@@ -68,6 +68,18 @@ main = ->
     cert: fs.readFileSync(exports.config.ssl.cert)
   }
 
+  if exports.config.ssl.chain
+    ca = []
+    chain = fs.readFileSync(exports.config.ssl.chain, "utf-8")
+    chain = chain.split "\n"
+    cert = []
+    for line in chain when line.length isnt 0
+      cert.push line
+      if line.match /-END CERTIFICATE-/
+        ca.push cert.join "\n"
+        cert = []
+    sslMiddleware['ca'] = ca
+
   auth = apiAuth(exports.config.api, googleAuth(exports.config.google.domain, secure: true))
 
   app = connect()
