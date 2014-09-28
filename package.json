@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "coffee-script": "",
-    "connect": "",
+    "connect": "<3.0.0",
     "connect-googleapps": "0.3.1"
   }
 }
